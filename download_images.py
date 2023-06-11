@@ -7,7 +7,7 @@ import os
 import sys
 import imghdr
 from tqdm import *
-from Queue import Queue
+from queue import Queue
 from threading import Thread
 
 # base path to save images
@@ -38,7 +38,7 @@ def worker():
         handler.write(img_data)
     url_queue.task_done()
    
-for i in xrange(100):
+for i in range(100):
   t = Thread(target=worker)
   t.daemon = True
   t.start()

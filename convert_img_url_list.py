@@ -11,7 +11,7 @@ def _convert_string_to_mineral_list(string):
   start = -1 
   end = -1 
   if 'var' in string:
-    for i in xrange(len(string)):
+    for i in range(len(string)):
       if string[i] == '(':
         start = i
     string = string[:start]
@@ -21,11 +21,11 @@ with open('img_url_list.csv', 'r') as f:
   lines = f.readlines()
 
 # split url out
-for i in xrange(len(lines)):
+for i in range(len(lines)):
   new_line = lines[i].split(',')
   replace_line = []
   replace_line.append(new_line[0])
-  for j in xrange(len(new_line)-2):
+  for j in range(len(new_line)-2):
     mineral_name = _convert_string_to_mineral_list(new_line[j+1])
     if mineral_name not in replace_line:
       replace_line.append(mineral_name)

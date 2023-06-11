@@ -7,7 +7,7 @@ import os
 import sys
 import imghdr
 from tqdm import *
-from Queue import Queue
+from queue import Queue
 from threading import Thread
 
 # checks if string is valid ascii
@@ -57,20 +57,20 @@ def worker():
         img_urls.append(img_url)
     url_queue.task_done()
    
-for i in xrange(100):
+for i in range(100):
   t = Thread(target=worker)
   t.daemon = True
   t.start()
 
 # get all 900,000 urls
-for i in tqdm(xrange(900)):
-  for j in tqdm(xrange(1000)):
+for i in tqdm(range(900)):
+  for j in tqdm(range(1000)):
     url_queue.put(base_path + 'photo-' + str(j + 1000*i) + '.html')
   url_queue.join()
   print("saving URLs")
   # save all data every 10000 urls
   img_url_file = open("img_urls/img_url_list_" + str(i).zfill(5) + ".csv", "w")
-  for i in xrange(len(img_urls)):
+  for i in range(len(img_urls)):
     img_url_file.write(img_urls[i] + ', ')
     for m in mineral_types[i]:
       img_url_file.write(m + ', ')
