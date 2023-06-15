@@ -27,9 +27,8 @@ void main() async {
 
   List<String> cleanedMineralList = cleanDataSet(csvfileAsString);
 
-  File cleanMinerals = File("selected_minerals/cleaned_mineral_list.csv");
-
-  await cleanMinerals.writeAsString(cleanedMineralList.join());
+  await File("selected_minerals/cleaned_mineral_list.csv")
+      .writeAsString(cleanedMineralList.join());
 
   ///Select Minerals of Interest
 
@@ -38,9 +37,12 @@ void main() async {
 
   ///Writing the output file to disk
 
-  File outPutCSV = File("selected_minerals/selected_minerals.csv");
+  await File("selected_minerals/selected_minerals.csv")
+      .writeAsString(selectedMinerals.join());
 
-  await outPutCSV.writeAsString(selectedMinerals.join());
+  ///Saving each mineral as seperate file
+  await saveMineralsasIndividualList(
+      mineralNames: mineralList, csv: selectedMinerals);
 }
 
 //-------------------------------
@@ -79,11 +81,12 @@ List<String> cleanDataSet(String csv) {
 
     ///remove any extra space at the endg that makes it think there is a
     /// new column this include the trailing comma, a space, and a "new line" charcter
-if(entry.length>3){
-    entry = entry.substring(0,
-        entry.length - 3); //Remove the comma, space, and faux space at the end
-}
-
+    if (entry.length > 3) {
+      entry = entry.substring(
+          0,
+          entry.length -
+              3); //Remove the comma, space, and faux space at the end
+    }
 
     if (entry.split(' ').length == 2) {
       ///Take an entry, split it into the different words. If it has less than 2 items in the list,
@@ -95,4 +98,28 @@ if(entry.length>3){
   print("cleaned up our list");
 
   return chosenMinerals;
+}
+
+Future<void> saveMineralsasIndividualList({
+  required List<String> mineralNames,
+  required List<String> csv,
+}) async {
+  for (String mineral in mineralNames) {
+    List<String> tempMineral = [];
+    for (int i = 0; i < csv.length; i++) {
+      if (csv[i].contains(mineral)) {
+        tempMineral.add(csv[i]);
+      }
+    }
+
+    //Save the file
+
+    await File("selected_minerals/${mineral}.csv")
+        .writeAsString(tempMineral.join());
+
+    tempMineral.clear();
+  }
+
+  print("saving each mineral to file");
+
 }
