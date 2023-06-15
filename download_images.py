@@ -11,10 +11,10 @@ from queue import Queue
 from threading import Thread
 
 # base path to save images
-base_save_path = '/data/mindat-images/'
+base_save_path = '/downloaded_images/'
 
 # read list of img urls
-with open('img_url_list_converted.csv', 'r') as f:
+with open('selected_minerals/basalt.csv', 'r') as f:
   lines = f.readlines()
 url_list = []
 for l in lines:
