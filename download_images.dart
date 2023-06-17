@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 void main() async {
-  final String mineralLabel = "basalt";
+  final String mineralLabel = "copper";
 
   final File csvFile = File("selected_minerals/${mineralLabel}.csv");
 
@@ -35,7 +35,7 @@ Future<void>? downloadImages({
 }) async {
   String _basePath = "downloaded_images/";
 
-  for (int i = 0; i < urls.length-1; i++) {
+  for (int i = 0 ; i < urls.length-1; i++) {
     Uri uri = Uri.parse(urls[i]);
 
     final HttpClient client = HttpClient();
