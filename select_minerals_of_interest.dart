@@ -12,6 +12,11 @@ void main() async {
     "gneiss",
     "granite",
     "basalt",
+    "fluorite",
+    "pyrite",
+    "magnetite",
+    "galena",
+    "sphalerite",
   ];
 
   final File csvFile = File("img_url_list_converted.csv");
@@ -121,5 +126,4 @@ Future<void> saveMineralsasIndividualList({
   }
 
   print("saving each mineral to file");
-
 }
