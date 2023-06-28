@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 void main() async {
-  final String mineralLabel = "quartz";
+  final String mineralLabel = "pyrite";
 
   final File csvFile = File("selected_minerals/${mineralLabel}.csv");
 
@@ -16,7 +16,7 @@ void main() async {
 
   for (String url in csvList) {
     List<String> tempList = url.split(',');
-  
+
     urls.add(tempList.first);
     // for (String str in tempList) {
     //   if (str.contains("http")) {
@@ -35,7 +35,7 @@ Future<void>? downloadImages({
 }) async {
   String _basePath = "downloaded_images/";
 
-  for (int i = 3896 ; i < 5000; i++) {
+  for (int i =0; i < urls.length-1; i++) {
     Uri uri = Uri.parse(urls[i]);
 
     final HttpClient client = HttpClient();
