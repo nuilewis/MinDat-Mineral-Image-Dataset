@@ -7,11 +7,11 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-# Preparing Data 
+# Preparing Data
 IMAGE_SIZE = [224, 224, 3]
 BATCH_SIZE = 32
 TRAINING_DIR = "downloaded_images/dataset/train"
-EPOCHS = 5
+EPOCHS = 30
 
 # 1. Image Augmentation using an ImageDataGenerator
 datagen = tf.keras.preprocessing.image.ImageDataGenerator(
@@ -39,7 +39,7 @@ validation_generator = datagen.flow_from_directory(
     target_size=(224, 224),
     class_mode='categorical',
     batch_size=BATCH_SIZE,
-    subset = 'validation',
+    subset='validation',
 )
 
 # Loading pretrained model
@@ -49,37 +49,47 @@ vgg16 = tf.keras.applications.VGG16(
 vgg16.trainable = False
 
 
-
 # Training our own model
 
-#Adding new layers for our specific task (we could add more convolution layers and dense or pooling etc)
-x=tf.keras.layers.Flatten()(vgg16.output)
-output_layer = tf.keras.layers.Dense(10, activation = 'softmax') (x)
+# Adding new layers for our specific task (we could add more convolution layers and dense or pooling etc)
+x = tf.keras.layers.Flatten()(vgg16.output)
+output_layer = tf.keras.layers.Dense(10, activation='softmax')(x)
 
 # compile the model
-model = tf.keras.models.Model(inputs = vgg16.input, outputs = output_layer)
+model = tf.keras.models.Model(inputs=vgg16.input, outputs=output_layer)
 
 model.summary()
-
-model.compile(optimizer=tf.keras.optimizers.Adam(),
+optimizer = tf.keras.optimizers.Adam()
+model.compile(optimizer= optimizer,
               loss='categorical_crossentropy', metrics=['accuracy'])
+
+config = optimizer.get_config()
+
+print("learning rate is ", config['learning_rate'])
 
 # save the best model as we progress
 save_best_model_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath='model/trained/mineral_identification_model.h5', verbose=2, save_best_only=True)
 startingTime = datetime.now()
 
+# Create a CSVLogger object
+csv_logger = tf.keras.callbacks.CSVLogger('training_log.csv', append=True, separator=',')
+
 # Training
 
 model_history = model.fit(
-        train_generator, epochs=EPOCHS ,validation_steps=32, callbacks=save_best_model_callback, verbose=1,)
+    train_generator, validation_data=validation_generator, validation_split=0.2, epochs=EPOCHS, validation_steps=32, callbacks=[save_best_model_callback, csv_logger], verbose=1)
+
 
 
 # evaluating
 loss0, accuracy0 = model.evaluate(validation_generator)
 
-print("initial loss: {:.2f}".format(loss0))
-print("initial accuracy: {:.2f}".format(accuracy0))
+
+print("Test loss: {:.2f}".format(loss0))
+print("Test accuracy: {:.2f}".format(accuracy0))
+
+model.save('model/trained/mineral_identification_model_train_complete.h5')
 
 # plotting the model training results
 

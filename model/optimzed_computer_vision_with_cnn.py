@@ -31,11 +31,16 @@ model = tf.keras.models.Sequential([
 model.compile(optimizer= 'adam',
               loss= 'sparse_categorical_crossentropy', metrics=['accuracy'])
 model.summary()
-model.fit(training_images, training_labels, epochs=5,)
+model_history = model.fit(training_images, training_labels, epochs=5,)
 
 
 test_loss, test_accuracy = model.evaluate(test_images, test_labels)
 print ('Test loss: {}, Test accuracy: {}'.format(test_loss, test_accuracy*100))
+
+acc = model_history.history['accuracy']
+val_acc = model_history.history['val_accuracy']
+loss = model_history.history['loss']
+val_loss = model_history.history['val_loss']
 
 classifications = model.predict(test_images)
 
