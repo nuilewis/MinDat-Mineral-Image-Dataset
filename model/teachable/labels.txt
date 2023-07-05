@@ -1,0 +1,2 @@
+0 copper
+1 silver
